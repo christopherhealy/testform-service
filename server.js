@@ -1,7 +1,11 @@
-// server.js
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+// server.js (ESM version for Render)
+import http from "http";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
 const FILE = path.join(__dirname, "testform.json");
@@ -28,19 +32,17 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // GET current JSON
+  // GET JSON
   if (req.method === "GET" && req.url === "/testform.json") {
     const data = readJson();
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify(data));
   }
 
-  // POST new JSON
+  // POST JSON
   if (req.method === "POST" && req.url === "/testform.json") {
     let body = "";
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
+    req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
       try {
         const parsed = JSON.parse(body || "{}");
@@ -56,7 +58,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // everything else
+  // 404
   res.writeHead(404, { "Content-Type": "text/plain" });
   res.end("Not found");
 });
