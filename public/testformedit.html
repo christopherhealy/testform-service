@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TestForm Editor</title>
+  </head>
+  <body>
+    <h1>TestForm Editor (Vercel)</h1>
+
+    <label>
+      Message:
+      <input id="message" />
+    </label>
+    <button id="save">Save</button>
+
+    <p id="status"></p>
+
+    <script>
+      const API = "https://testform-service.onrender.com/testform.json";
+
+      // load current
+      fetch(API)
+        .then((r) => r.json())
+        .then((data) => {
+          document.getElementById("message").value = data.message || "";
+        });
+
+      document.getElementById("save").onclick = () => {
+        const msg = document.getElementById("message").value;
+        fetch(API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            document.getElementById("status").textContent =
+              "Saved ✅: " + data.message;
+          })
+          .catch(() => {
+            document.getElementById("status").textContent = "Error ❌";
+          });
+      };
+    </script>
+  </body>
+</html>

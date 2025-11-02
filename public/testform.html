@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TestForm Viewer</title>
+  </head>
+  <body>
+    <h1>TestForm Viewer (Vercel)</h1>
+    <p>Message: <span id="msg">loading…</span></p>
+
+    <script>
+      const API = "https://testform-service.onrender.com/testform.json";
+
+      fetch(API)
+        .then((r) => r.json())
+        .then((data) => {
+          document.getElementById("msg").textContent = data.message;
+        })
+        .catch((err) => {
+          console.error(err);
+          document.getElementById("msg").textContent = "(error loading)";
+        });
+    </script>
+  </body>
+</html>
